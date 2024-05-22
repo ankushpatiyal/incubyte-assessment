@@ -15,5 +15,11 @@ describe StringCalculator do
         expect(calculator.add("3")).to eq(3)
       end
     end
+
+    context 'when multiple numbers are given' do
+      it 'returns the sum of those numbers' do
+        expect(calculator.add("3,5")).to eq(8)
+      end
+    end
   end
 end
