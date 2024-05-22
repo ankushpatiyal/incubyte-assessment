@@ -51,5 +51,17 @@ describe StringCalculator do
         expect(calculator.add("//;\n2;8;3")).to be(13)
       end
     end
+
+    context 'when there are negative numbers in the input with custom delimiters' do
+      it 'raise negative input error' do
+        expect {calculator.add("//;\n-2;8;3")}.to raise_error(Errors::NegativeInputError)
+      end
+    end
+
+    context 'when there are negative numbers in the input' do
+      it 'raise negative input error' do
+        expect {calculator.add("2,-8,3")}.to raise_error(Errors::NegativeInputError)
+      end
+    end
   end
 end
