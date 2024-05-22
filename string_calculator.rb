@@ -10,7 +10,7 @@ class StringCalculator
     def add(numbers)
       return 0 if numbers.empty?
 
-      split_operator, numbers = extract_operator_and_number(numbers)
+      split_operator, numbers = extract_operator_and_number(numbers.strip)
       nums_array = get_numbers(numbers, split_operator)
       validate_all(numbers, nums_array)
 

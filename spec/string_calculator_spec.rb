@@ -71,6 +71,12 @@ describe StringCalculator do
         expect { calculator.add('2,-8,3') }.to raise_error(Errors::NegativeInputError)
       end
     end
+
+    context 'when empty space in front and end of the string' do
+      it 'returns the sum of those numbers' do
+        expect(calculator.add(' 3,5 ')).to eq(8)
+      end
+    end
   end
 
   describe '.split_operator' do
