@@ -3,7 +3,7 @@ require_relative '../string_calculator'
 describe StringCalculator do
   let!(:calculator) { StringCalculator }
 
-  describe '#add' do
+  describe '.add' do
     context "when empty string is given" do
       it 'returns 0' do
         expect(calculator.add("")).to eq(0)
@@ -71,7 +71,7 @@ describe StringCalculator do
     end
   end
 
-  describe '#split_operator' do
+  describe '.split_operator' do
     context 'when custom delimeter is given' do
       it 'returns the custom delimeter regex' do
         expect(StringCalculator.split_operator("//;\n2;8;3")).to eq(%r{[;]})
@@ -85,7 +85,7 @@ describe StringCalculator do
     end
   end
 
-  describe '#extract_number_string' do
+  describe '.extract_number_string' do
     context 'when custom delimeter is given' do
       it 'returns string the number string without delimeter syntax' do
         expect(StringCalculator.extract_number_string("//;\n2;8;3", %r{[;]})).to eq("2;8;3")
@@ -95,6 +95,20 @@ describe StringCalculator do
     context 'when no custom delimeter is given' do
       it 'returns string the as it is' do
         expect(StringCalculator.extract_number_string("2,8\n3", StringCalculator::DEFAULT_SPLIT_OPERATOR)).to eq("2,8\n3")
+      end
+    end
+  end
+
+  describe '.first_and_last_character_invalid?' do
+    context 'when invalid character at first or last position in string' do
+      it 'returns true' do
+        expect(StringCalculator.first_and_last_character_invalid?("1,2,\n")).to be(true)
+      end
+    end
+
+    context 'when valid characters' do
+      it 'returns false' do
+        expect(StringCalculator.first_and_last_character_invalid?("1,2,3")).to be(false)
       end
     end
   end

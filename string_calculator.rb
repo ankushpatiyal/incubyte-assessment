@@ -7,9 +7,9 @@ class StringCalculator
       return 0 if numbers.empty?
 
       split_operator, numbers = extract_operator_and_number(numbers)
-      raise Errors::InvalidInputError if numbers[0].match?(/[^-?\d]\z/) || numbers[-1].match?(/[^\d]\z/)
+      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
 
-      nums_array = numbers.split(split_operator)
+      nums_array = get_numbers(numbers, split_operator)
       nums_array.each { |val| raise Errors::InvalidInputError if val.match?(/[^-?\d]/) }
       negative_numbers = nums_array.select{ |val| val.to_i < 0 }
       raise Errors::NegativeInputError.new(negative_numbers) if negative_numbers.length > 0
@@ -21,6 +21,14 @@ class StringCalculator
       split_operator = split_operator(numbers)
       numbers = extract_number_string(numbers, split_operator)
       return split_operator, numbers
+    end
+
+    def first_and_last_character_invalid?(numbers)
+      numbers[0].match?(/[^-?\d]\z/) || numbers[-1].match?(/[^\d]\z/)
+    end
+
+    def get_numbers(numbers, split_operator)
+      numbers.split(split_operator)
     end
 
     def split_operator(numbers)
