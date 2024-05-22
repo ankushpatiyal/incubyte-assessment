@@ -42,7 +42,7 @@ describe StringCalculator do
 
     context 'when there is a character at the end of the string that is not number' do
       it 'raises invalid input error' do
-        expect { calculator.add("3\n5,6,\n") }.to raise_error(Errors::InvalidInput)
+        expect { calculator.add("3\n5,6,\n") }.to raise_error(Errors::InvalidInputError)
       end
     end
 
