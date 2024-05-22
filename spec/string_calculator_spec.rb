@@ -112,4 +112,32 @@ describe StringCalculator do
       end
     end
   end
+
+  describe 'invalid_number_exists?' do
+    context 'when invalid numbers present in array' do
+      it 'returns true' do
+        expect(StringCalculator.invalid_number_exists?(["1", "2s", "3"])).to be(true)
+      end
+    end
+
+    context 'when valid numbers' do
+      it 'returns false' do
+        expect(StringCalculator.invalid_number_exists?(["1", "2", "3"])).to be(false)
+      end
+    end
+  end
+
+  describe 'get_all_negative_numbers' do
+    context 'when negative numbers present in array' do
+      it 'returns those negative numbers' do
+        expect(StringCalculator.get_all_negative_numbers(["1", "-2", "-3"])).to eq(["-2", "-3"])
+      end
+    end
+
+    context 'when no negative numbers' do
+      it 'returns blank array' do
+        expect(StringCalculator.get_all_negative_numbers(["1", "2", "3"])).to eq([])
+      end
+    end
+  end
 end

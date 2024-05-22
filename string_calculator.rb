@@ -1,20 +1,35 @@
-require_relative './errors'
-
 class StringCalculator
   DEFAULT_SPLIT_OPERATOR = %r{[\n,]}
+
   class << self
     def add(numbers)
       return 0 if numbers.empty?
 
       split_operator, numbers = extract_operator_and_number(numbers)
-      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
-
       nums_array = get_numbers(numbers, split_operator)
-      nums_array.each { |val| raise Errors::InvalidInputError if val.match?(/[^-?\d]/) }
-      negative_numbers = nums_array.select{ |val| val.to_i < 0 }
-      raise Errors::NegativeInputError.new(negative_numbers) if negative_numbers.length > 0
+      validate_all(numbers, nums_array)
 
-      nums_array.inject(0) { |total, val| total + val.to_i }
+      total_sum(nums_array)
+    end
+
+    def validate_all(numbers, nums_array)
+      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
+      raise Errors::InvalidInputError if invalid_number_exists?(nums_array)
+
+      negative_numbers = get_all_negative_numbers(nums_array)
+      raise Errors::NegativeInputError.new(negative_numbers) if negative_numbers.length > 0
+    end
+
+    def invalid_number_exists?(numbers)
+      numbers.any? { |val| val.match?(/[^-?\d]/) || val == "" }
+    end
+
+    def get_all_negative_numbers(numbers)
+      numbers.select{ |val| val.to_i < 0 }
+    end
+
+    def total_sum(numbers)
+      numbers.inject(0) { |total, val| total + val.to_i }
     end
 
     def extract_operator_and_number(numbers)
