@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
 class StringCalculator
-  DEFAULT_SPLIT_OPERATOR = %r{[\n,]}
+  DEFAULT_SPLIT_OPERATOR = /[\n,]/
+  CUSTOM_REGEX_SPLIT_OPERATOR = /\A\/\/(.)\n(.+)/
+  EXCEPT_NUMBER_REGEX = /[^\d]/
+  EXCEPT_NUMBER_OR_NEGATIVE_SIGN_REGEX = /[^-?\d]/
 
   class << self
     def add(numbers)
@@ -12,56 +17,52 @@ class StringCalculator
       total_sum(nums_array)
     end
 
-    def validate_all(numbers, nums_array)
-      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
-      raise Errors::InvalidInputError if invalid_number_exists?(nums_array)
+    private
 
-      negative_numbers = get_all_negative_numbers(nums_array)
-      raise Errors::NegativeInputError.new(negative_numbers) if negative_numbers.length > 0
+    def split_operator(numbers)
+      return /#{numbers.match(CUSTOM_REGEX_SPLIT_OPERATOR)[1]}/ if numbers.match?(CUSTOM_REGEX_SPLIT_OPERATOR)
+
+      DEFAULT_SPLIT_OPERATOR
     end
 
-    def invalid_number_exists?(numbers)
-      numbers.any? { |val| val.match?(/[^-?\d]/) || val == "" }
-    end
+    def extract_number_string(numbers, split_operator)
+      return numbers.match(CUSTOM_REGEX_SPLIT_OPERATOR)[2] if split_operator != DEFAULT_SPLIT_OPERATOR
 
-    def get_all_negative_numbers(numbers)
-      numbers.select{ |val| val.to_i < 0 }
-    end
-
-    def total_sum(numbers)
-      numbers.inject(0) { |total, val| total + val.to_i }
+      numbers
     end
 
     def extract_operator_and_number(numbers)
       split_operator = split_operator(numbers)
       numbers = extract_number_string(numbers, split_operator)
-      return split_operator, numbers
-    end
-
-    def first_and_last_character_invalid?(numbers)
-      numbers[0].match?(/[^-?\d]\z/) || numbers[-1].match?(/[^\d]\z/)
+      [split_operator, numbers]
     end
 
     def get_numbers(numbers, split_operator)
       numbers.split(split_operator)
     end
 
-    def split_operator(numbers)
-      split_operator = DEFAULT_SPLIT_OPERATOR
-
-      if numbers.match?(/\A\/\/(.)\n/)
-        split_operator = %r{[#{numbers.match(/\A\/\/(.)\n/)[1]}]}
-      end
-
-      split_operator
+    def first_and_last_character_invalid?(numbers)
+      numbers[0].match?(EXCEPT_NUMBER_OR_NEGATIVE_SIGN_REGEX) || numbers[-1].match?(EXCEPT_NUMBER_REGEX)
     end
 
-    def extract_number_string(numbers, split_operator)
-      if split_operator != DEFAULT_SPLIT_OPERATOR
-        numbers = numbers.match(/\A\/\/(.)\n(.+)/)[2]
-      end
+    def invalid_number_exists?(numbers)
+      numbers.any? { |val| val.match?(EXCEPT_NUMBER_OR_NEGATIVE_SIGN_REGEX) || val.empty? }
+    end
 
-      numbers
+    def get_all_negative_numbers(numbers)
+      numbers.select { |val| val.to_i.negative? }
+    end
+
+    def validate_all(numbers, nums_array)
+      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
+      raise Errors::InvalidInputError if invalid_number_exists?(nums_array)
+
+      negative_numbers = get_all_negative_numbers(nums_array)
+      raise Errors::NegativeInputError, negative_numbers unless negative_numbers.empty?
+    end
+
+    def total_sum(numbers)
+      numbers.inject(0) { |total, val| total + val.to_i }
     end
   end
 end

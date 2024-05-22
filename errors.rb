@@ -2,13 +2,13 @@ module Errors
   class InvalidInputError < StandardError
     DEFAULT_MESSAGE = 'Invalid Input'
 
-    def initialize(msg=DEFAULT_MESSAGE)
+    def initialize(msg = DEFAULT_MESSAGE)
       super
     end
   end
 
   class NegativeInputError < StandardError
-    NEGATIVE_INPUT_MESSAGE = "Negative numbers not allowed"
+    NEGATIVE_INPUT_MESSAGE = 'Negative numbers not allowed'
 
     def initialize(numbers)
       @numbers = numbers
@@ -16,7 +16,7 @@ module Errors
     end
 
     def custom_error_message
-      NEGATIVE_INPUT_MESSAGE + " " + @numbers.join(",")
+      "#{NEGATIVE_INPUT_MESSAGE} #{@numbers.join(',')}"
     end
   end
 end
