@@ -21,5 +21,17 @@ describe StringCalculator do
         expect(calculator.add("3,5")).to eq(8)
       end
     end
+
+    context 'when newline is separator between numbers' do
+      it 'gives sum of the numbers present' do
+        expect(calculator.add("3\n5")).to eq(8)
+      end
+    end
+
+    context 'when newline and comma both are treated as separators' do
+      it 'tgives sum of the numbers present' do
+        expect(calculator.add("3\n5,6")).to eq(14)
+      end
+    end
   end
 end
