@@ -45,5 +45,11 @@ describe StringCalculator do
         expect { calculator.add("3\n5,6,\n") }.to raise_error(Errors::InvalidInput)
       end
     end
+
+    context 'when there is a different delimeter provided' do
+      it 'returns the sum of numbers after separating them on the basis of new delimeter' do
+        expect(calculator.add("//;\n2;8;3")).to be(13)
+      end
+    end
   end
 end
