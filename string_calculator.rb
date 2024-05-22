@@ -14,7 +14,7 @@ class StringCalculator
       nums_array = get_numbers(numbers, split_operator)
       validate_all(numbers, nums_array)
 
-      total_sum(nums_array)
+      total(nums_array)
     end
 
     private
@@ -54,14 +54,13 @@ class StringCalculator
     end
 
     def validate_all(numbers, nums_array)
-      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers)
-      raise Errors::InvalidInputError if invalid_number_exists?(nums_array)
+      raise Errors::InvalidInputError if first_and_last_character_invalid?(numbers) || invalid_number_exists?(nums_array)
 
       negative_numbers = get_all_negative_numbers(nums_array)
       raise Errors::NegativeInputError, negative_numbers unless negative_numbers.empty?
     end
 
-    def total_sum(numbers)
+    def total(numbers)
       numbers.inject(0) { |total, val| total + val.to_i }
     end
   end
